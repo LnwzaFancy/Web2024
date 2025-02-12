@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบทดสอบ - วิทยาศาสตร์</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@3.7.4/dist/vuetify.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.7.4/dist/vuetify.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f8e9;
+            margin: 0;
+            padding: 0;
+        }
+        #app {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f1f8e9;
+        }
+        .quiz-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+        }
+        .question-container {
+            margin-bottom: 20px;
+        }
+        .question-container p {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .answer-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .result-message {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .next-button {
+            margin-top: 20px;
+        }
+        .start-button {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            background-color: #388e3c;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="quiz-container" v-if="quizStarted">
+            <h1>แบบทดสอบวิทยาศาสตร์</h1>
+
+            <div v-if="currentQuestionIndex < questions.length">
+                <div class="question-container">
+                    <p>{{ questions[currentQuestionIndex].text }}</p>
+                    <v-radio-group v-model="selectedAnswer" @change="answerChecked = false">
+                        <v-radio v-for="(option, i) in questions[currentQuestionIndex].options" :key="i" :label="option" :value="option"></v-radio>
+                    </v-radio-group>
+                </div>
+
+                <div class="answer-buttons">
+                    <v-btn v-if="answerChecked" @click="nextQuestion" class="next-button" color="primary" block>ถัดไป</v-btn>
+                    <v-btn v-if="!answerChecked" @click="checkAnswer" class="next-button" color="success" block>ตรวจคำตอบ</v-btn>
+                </div>
+
+                <p v-if="answerChecked" :style="isCorrect ? { color: 'green' } : { color: 'red' }" class="result-message">
+                    {{ isCorrect ? 'คำตอบถูกต้อง!' : 'คำตอบผิด!' }}
+                </p>
+            </div>
+
+            <div v-else>
+                <p>คะแนนของคุณ: {{ score }} / {{ questions.length }}</p>
+                <v-btn @click="startQuiz" color="primary" class="next-button">เริ่มทำแบบทดสอบใหม่</v-btn>
+            </div>
+        </div>
+
+        <div v-if="!quizStarted" class="quiz-container">
+            <h1>ยินดีต้อนรับสู่แบบทดสอบ!</h1>
+            <p>คลิกที่ปุ่มด้านล่างเพื่อเริ่มทำแบบทดสอบ</p>
+            <v-btn @click="startQuiz" class="start-button">เริ่มทำแบบทดสอบ</v-btn>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+        const { createVuetify } = Vuetify
+        const vuetify = createVuetify()
+
+        const app = createApp({
+            data() {
+                return {
+                    quizStarted: false,
+                    currentQuestionIndex: 0,
+                    selectedAnswer: null,
+                    answerChecked: false,
+                    score: 0,
+                    isCorrect: false,
+                    questions: []
+                }
+            },
+            methods: {
+                startQuiz() {
+                    this.quizStarted = true;
+                    this.loadQuizData();
+                },
+                async loadQuizData() {
+                    try {
+                        const response = await fetch('quiz2.json');
+                        const data = await response.json();
+                        this.questions = data.questions;
+                    } catch (error) {
+                        console.error("Error loading quiz data: ", error);
+                    }
+                },
+                checkAnswer() {
+                    this.answerChecked = true;
+                    this.isCorrect = this.selectedAnswer === this.questions[this.currentQuestionIndex].correctAnswer;
+                    if (this.isCorrect) {
+                        this.score++;
+                    }
+                },
+                nextQuestion() {
+                    this.currentQuestionIndex++;
+                    this.selectedAnswer = null;
+                    this.answerChecked = false;
+                }
+            }
+        })
+        app.use(vuetify).mount('#app')
+    </script>
+</body>
+</html>
