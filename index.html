@@ -1,12 +1,91 @@
-<htm1>
-    <body>
-      <h1>วิชา SC310006 Mobile and web Application Development </h1>
-      <u1>
-        <div>
-        <a href="work1/work1.html">งานที่ 1</a>
-        <a href="work2/work2.htmal">งานที่ 2</a>
-        <a>งานที่ 3</a>
-        </div>
-      โดย นางสาว สุชญา พานสมภพ
-    </body>
-  </htm1>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SC310006 - งานนักศึกษา</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+        
+        body {
+            font-family: 'Itim', cursive;
+            background-color: white;
+            text-align: center;
+            color: #b30000;
+            margin: 50px;
+        }
+        h1 {
+            color: #b30000;
+        }
+        .container {
+            background: #fff;
+            border: 2px solid #b30000;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            background-color: #b30000;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        a:hover {
+            background-color: #ff4d4d;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 2px solid #b30000;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        .popup button {
+            background: #b30000;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>วิชา SC310006 Mobile and Web Application Development</h1>
+    <div class="container">
+        <a href="#" onclick="showPopup('งานที่ 1', 'work1.html')">งานที่ 1</a>
+        <a href="#" onclick="showPopup('งานที่ 2', '/work2/work2.html')">งานที่ 2</a>
+        <a href="#" onclick="showPopup('งานที่ 3', '/work3/work3.html')">งานที่ 3</a>
+        <a href="#" onclick="showPopup('งานที่ 4', '/work4/work4.html')">งานที่ 4</a>
+        <a href="#" onclick="showPopup('งานที่ 5', '/work5/work5.html')">งานที่ 5</a>
+    </div>
+    <p>โดย นางสาว สุชญา พานสมภพ</p>
+    
+    <div id="popup" class="popup">
+        <p id="popup-text"></p>
+        <button onclick="closePopup()">ปิด</button>
+    </div>
+
+    <script>
+        function showPopup(title, link) {
+            document.getElementById('popup-text').innerHTML = title + "<br><a href='" + link + "' target='_blank'>ไปยังงาน</a>";
+            document.getElementById('popup').style.display = 'block';
+        }
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+
